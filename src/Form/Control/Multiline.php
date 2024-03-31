@@ -685,9 +685,9 @@ class Multiline extends Form\Control
                 // no break - expression above always terminate
             case 'on-change':
                 $rowsRaw = $this->getApp()->decodeJson($this->getApp()->getRequestPostParam('rows'));
-                $response = ($this->onChangeFunction)($this->typeCastLoadValues($rowsRaw), $this->form);
-                $this->renderCallback->terminateAjax($this->renderCallback->getAjaxec($response));
-                // TODO JsCallback::terminateAjax() should return never
+                $this->renderCallback->set(function () use ($rowsRaw) {
+                    return ($this->onChangeFunction)($this->typeCastLoadValues($rowsRaw), $this->form);
+                });
         }
     }
 
