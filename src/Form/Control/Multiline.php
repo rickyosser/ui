@@ -450,7 +450,7 @@ class Multiline extends Form\Control
             'cellProps' => $this->getSuiTableCellProps($field),
             'caption' => $field->getCaption(),
             'default' => $this->getApp()->uiPersistence->typecastSaveField($field, $field->default),
-            'isExpr' => @isset($field->expr), // @phpstan-ignore-line
+            'isExpr' => @isset($field->expr), // @phpstan-ignore property.notFound
             'isEditable' => $field->isEditable(),
             'isHidden' => $field->isHidden(),
             'isVisible' => $field->isVisible(),
@@ -788,7 +788,7 @@ class Multiline extends Form\Control
             return $dummyModel->expr('[]', [$v]);
         };
 
-        foreach ($entity->getFields() as $field) {
+        foreach ($entity->getFields() as $field) { // @phpstan-ignore foreach.valueOverwrite (https://github.com/phpstan/phpstan/issues/11012)
             $dummyModel->addExpression($field->shortName, [
                 'expr' => isset($dummyFields[$field->shortName])
                     ? $dummyFields[$field->shortName]->expr

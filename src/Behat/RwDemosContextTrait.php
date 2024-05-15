@@ -39,7 +39,7 @@ trait RwDemosContextTrait
         if ($db === null) {
             try {
                 /** @var Persistence\Sql $db */
-                require_once $this->demosDir . '/init-db.php'; // @phpstan-ignore-line
+                require_once $this->demosDir . '/init-db.php'; // @phpstan-ignore varTag.nativeType
             } catch (\Throwable $e) {
                 throw new \Exception('Database error: ' . $e->getMessage());
             }
@@ -136,7 +136,7 @@ trait RwDemosContextTrait
             }
         }
 
-        return $changesByTable; // @phpstan-ignore-line https://github.com/phpstan/phpstan/issues/9252
+        return $changesByTable;
     }
 
     protected function restoreDatabaseBackup(): void
