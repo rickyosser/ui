@@ -84,12 +84,12 @@ $form->addControl(
         'step' => 1,
         'start' => 2,
         'smooth' => true,
-        'color' => 'red',
+        'color' => 'yellow',
         'caption' => 'Read Only Slider'
     ]
 );
 
-$form->addControl(
+$disabledSlider = $form->addControl(
     'slider_disb',
     [
         Form\Control\Slider::class,
@@ -105,6 +105,10 @@ $form->addControl(
         'caption' => 'Disabled Slider'
     ]
 );
+/**
+ * We can add classes to a slider by doing:
+ */
+$disabledSlider->slider->addClass('red');
 
 $group = $form->addGroup('File upload');
 

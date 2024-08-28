@@ -94,8 +94,8 @@ class Slider extends Input
     /** @var string|null Color of the slider. */
     public $color = null;
 
-    /** @var object|view */
-    private $slider;
+    /** @var object|View */
+    public $slider;
 
     /** @var object */
     private $owner;
@@ -113,7 +113,8 @@ class Slider extends Input
         //print_r(parent::class());
         $this->owner = $this->getOwner();
 
-        $this->slider = View::addTo($this->owner)->addClass('ui slider');
+        $this->slider = View::addTo($this->owner);
+        $this->slider->ui ='ui slider';
 
         if ($this->end) {
             $this->slider->addClass('range');
@@ -135,113 +136,124 @@ class Slider extends Input
             $this->slider->addClass('vertical');
         }
 
-        if($this->color) {
+        if ($this->color) {
             $this->slider->addClass($this->color);
         }
         
         $sliderSettings = [];
-        $sliderSettings = $sliderSettings + ['min' => $this->min];
-        $sliderSettings = $sliderSettings + ['max' => $this->max];
+        $sliderSettings['min'] = $this->min;
+        $sliderSettings['max'] = $this->max;
         if ($this->start) {
-            $sliderSettings = $sliderSettings + ['start' => $this->start];
+            $sliderSettings['start'] = $this->start;
         }
         if ($this->step) {
-            $sliderSettings = $sliderSettings + ['step' => $this->step];
+            $sliderSettings['step'] = $this->step;
         }
         if ($this->end) {
-            $sliderSettings = $sliderSettings + ['end' => $this->end];
+            $sliderSettings['end'] = $this->end;
             if ($this->minRange) {
-                $sliderSettings = $sliderSettings + ['minRange' => $this->minRange];
+                $sliderSettings['minRange'] = $this->minRange;
             }
             if ($this->maxRange) {
-                $sliderSettings = $sliderSettings + ['maxRange' => $this->maxRange];
+                $sliderSettings['maxRange'] = $this->maxRange;
             }
         }
-        $sliderSettings = $sliderSettings + ['labelType' => $this->labelType];
+        $sliderSettings['labelType'] = $this->labelType;
         if ($this->restrictedLabels) {
-            $sliderSettings = $sliderSettings + ['restrictedLabels' => $this->restrictedLabels];
+            $sliderSettings['restrictedLabels'] = $this->restrictedLabels;
         }
         if ($this->showThumbTooltip) {
-            $sliderSettings = $sliderSettings + ['showThumbTooltip' => $this->showThumbTooltip];
+            $sliderSettings['showThumbTooltip'] = $this->showThumbTooltip;
             if ($this->tooltipConfig) {
-                $sliderSettings = $sliderSettings + ['tooltipConfig' => $this->tooltipConfig];
+                $sliderSettings['tooltipConfig'] = $this->tooltipConfig;
             }
         }
-        $sliderSettings = $sliderSettings + ['showLabelTicks' => $this->showLabelTicks];
-        $sliderSettings = $sliderSettings + ['smooth' => $this->smooth];
-        $sliderSettings = $sliderSettings + ['autoAdjustLabels' => $this->autoAdjustLabels];
-        $sliderSettings = $sliderSettings + ['labelDistance' => $this->labelDistance];
-        $sliderSettings = $sliderSettings + ['decimalPlaces' => $this->decimalPlaces];
-        $sliderSettings = $sliderSettings + ['pageMultiplier' => $this->pageMultiplier];
-        $sliderSettings = $sliderSettings + ['decimalPlaces' => $this->decimalPlaces];
-        $sliderSettings = $sliderSettings + ['preventCrossover' => $this->preventCrossover];
+        $sliderSettings['showLabelTicks'] = $this->showLabelTicks;
+        $sliderSettings['smooth'] = $this->smooth;
+        $sliderSettings['autoAdjustLabels'] = $this->autoAdjustLabels;
+        $sliderSettings['labelDistance'] = $this->labelDistance;
+        $sliderSettings['decimalPlaces'] = $this->decimalPlaces;
+        $sliderSettings['pageMultiplier'] = $this->pageMultiplier;
+        $sliderSettings['decimalPlaces'] = $this->decimalPlaces;
+        $sliderSettings['preventCrossover'] = $this->preventCrossover;
         
-        if($this->disabled) {
+        if ($this->disabled || $this->readOnly) {
             $this->slider->addClass('disabled');
         }
 
-        /*
-         * First input value, always present
-         */
-        $this->firstInput = $this->owner->addControl(
-            $this->shortName . '_first',
-            [
-                Hidden::class
-            ]
-        )->set($this->start);
-
-        $onChange = [
-            'onChange' => new JsFunction(
-                ['v'],
-                [
-                    new JsExpression(
-                        $this->firstInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'first\'))',
-                        [$this->slider->getHtmlId()]
-                    ),
-                ])
-        ];
-        
-        /*
-         * Second input value, optional, depending on $this->end
-         */
-        if ($this->end) {
-            $this->secondInput = $this->owner->addControl(
-                $this->shortName . '_second',
+        if (!$this->disabled) {
+            /*
+             * First input value, always present
+             */
+            $this->firstInput = $this->owner->addControl(
+                $this->shortName . '_first',
                 [
                     Hidden::class
                 ]
-            )->set($this->end);
-            
-            $onChange = [
-                'onChange' => new JsFunction(
-                    ['v'],
-                    [
-                        new JsExpression(
-                            $this->firstInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'first\'))',
-                            [$this->slider->getHtmlId()]
-                        ),
-                        new JsExpression(
-                            $this->secondInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'second\'))',
-                            [$this->slider->getHtmlId()]
-                        ),
-                    ])
-            ];
-        }
-        if($this->readOnly) {
-            $this->firstInput->addClass('readOnly');
-            $this->firstInput->setAttr(['readOnly' => 'readOnly']);
-        }
-        
-        $sliderSettings = $sliderSettings + $onChange;
+            )->set($this->start);
 
+            if (!$this->readOnly) {
+                $onChange = [
+                    'onChange' => new JsFunction(
+                        ['v'],
+                        [
+                            new JsExpression(
+                                $this->firstInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'first\'))',
+                                [$this->slider->getHtmlId()]
+                            ),
+                        ])
+                ];
+            }
+            
+            /*
+             * Second input value, optional, depending on $this->end
+             */
+            if ($this->end) {
+                $this->secondInput = $this->owner->addControl(
+                    $this->shortName . '_second',
+                    [
+                        Hidden::class
+                    ]
+                )->set($this->end);
+
+                if (!$this->readOnly) {
+                    $onChange = [
+                        'onChange' => new JsFunction(
+                            ['v'],
+                            [
+                                new JsExpression(
+                                    $this->firstInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'first\'))',
+                                    [$this->slider->getHtmlId()]
+                                ),
+                                new JsExpression(
+                                    $this->secondInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'second\'))',
+                                    [$this->slider->getHtmlId()]
+                                ),
+                            ])
+                    ];
+                }
+            }
+        }
+        if ($this->readOnly) {
+            $this->firstInput->addClass('readOnly');
+            $this->firstInput->setAttr(['readOnly' => '']);
+        }
+        if (!empty($onChange)) {
+            $sliderSettings = $sliderSettings + $onChange;
+        }
         $this->slider->js(true)->slider(
             $sliderSettings,
         );
     }
 
+    
     #[\Override]
     protected function recursiveRender(): void
     {
+        /**
+         * Will be removed after testing...
+         */
+
         parent::recursiveRender();
 
         //print_r(get_object_vars($this));
