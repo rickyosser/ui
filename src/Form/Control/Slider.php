@@ -94,7 +94,7 @@ class Slider extends Input
     /** @var string|null Color of the slider. */
     public $color = null;
 
-    /** @var object|View */
+    /** @var View */
     public $slider;
 
     /** @var object */
@@ -110,7 +110,7 @@ class Slider extends Input
     protected function init(): void
     {
         parent::init();
-        //print_r(parent::class());
+        //print_r(get_object_vars(parent::init()));
         $this->owner = $this->getOwner();
 
         $this->slider = View::addTo($this->owner);
