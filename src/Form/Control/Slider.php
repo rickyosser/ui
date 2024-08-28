@@ -41,7 +41,7 @@ class Slider extends Input
 
     /** Whether a tooltip should be shown to the thumb(s) on hover. Will contain the current slider value. */
     public bool $showThumbTooltip = false;
-    
+
     /**
      * Tooltip configuration used when showThumbTooltip is true
      * Refer to Tooltip Variations for possible values.
@@ -202,7 +202,6 @@ class Slider extends Input
                     ),
                 ];
             }
-            
 
             // Second input value, optional, depending on $this->end
             if ($this->end) {
@@ -242,21 +241,5 @@ class Slider extends Input
         $this->slider->js(true)->slider(
             $sliderSettings,
         );
-    }
-
-    
-    #[\Override]
-    protected function recursiveRender(): void
-    {
-        /**
-         * Will be removed after testing...
-         */
-
-        parent::recursiveRender();
-
-        //print_r(get_object_vars($this));
-        //print_r(get_class_methods($this));
-        //print $this->parent;
-
     }
 }

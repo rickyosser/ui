@@ -67,7 +67,7 @@ $form->addControl(
         'step' => 0.1,
         'start' => 0.5,
         'smooth' => true,
-        'caption' => 'Normal Slider'
+        'caption' => 'Normal Slider',
     ]
 );
 
@@ -85,7 +85,7 @@ $form->addControl(
         'start' => 2,
         'smooth' => true,
         'color' => 'yellow',
-        'caption' => 'Read Only Slider'
+        'caption' => 'Read Only Slider',
     ]
 );
 
@@ -102,12 +102,10 @@ $disabledSlider = $form->addControl(
         'step' => 1,
         'start' => 5,
         'smooth' => true,
-        'caption' => 'Disabled Slider'
+        'caption' => 'Disabled Slider',
     ]
 );
-/**
- * We can add classes to a slider by doing:
- */
+// We can add classes to a slider by doing:
 $disabledSlider->slider->addClass('red');
 
 $group = $form->addGroup('File upload');
