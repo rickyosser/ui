@@ -9,9 +9,6 @@ use Atk4\Ui\Form;
 use Atk4\Ui\Header;
 use Atk4\Ui\Js\JsExpression;
 
-
-
-
 /** @var App $app */
 require_once __DIR__ . '/../init-app.php';
 
@@ -27,7 +24,7 @@ $form->addControl(
         'max' => 10,
         'step' => 1,
         'start' => 5,
-        'caption' => 'Simple Slider'
+        'caption' => 'Simple Slider',
     ]
 );
 
@@ -41,7 +38,7 @@ $slider2 = $form->addControl(
         'max' => 10,
         'step' => 1,
         'start' => 5,
-        'caption' => 'Blue ticked and labeled Simple Slider'
+        'caption' => 'Blue ticked and labeled Simple Slider',
     ]
 );
 $slider2->slider->addClass('blue');
@@ -57,7 +54,7 @@ $form->addControl(
         'step' => 1,
         'start' => 5,
         'smooth' => true,
-        'caption' => 'Smooth Blue ticked and labeled Simple Slider'
+        'caption' => 'Smooth Blue ticked and labeled Simple Slider',
     ]
 );
 
@@ -74,7 +71,7 @@ $form->addControl(
         'end' => 6,
         'smooth' => true,
         'color' => 'blue',
-        'caption' => 'Smooth Blue ticked and labeled Ranged Slider'
+        'caption' => 'Smooth Blue ticked and labeled Ranged Slider',
     ]
 );
 

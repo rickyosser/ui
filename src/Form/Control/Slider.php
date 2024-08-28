@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Atk4\Ui\Form\Control;
 
-use Atk4\Ui\View;
 use Atk4\Ui\Js\JsExpression;
 use Atk4\Ui\Js\JsFunction;
-use Atk4\Ui\Js\JsReload;
+use Atk4\Ui\View;
 
 class Slider extends Input
 {
@@ -26,19 +25,19 @@ class Slider extends Input
     public float $start = 0;
 
     /** @var float|null The second value to set in case of a range slider. */
-    public $end = null;
+    public $end;
 
     /** @var float|false Makes sure that the two thumbs of a range slider always need to have a difference of the given value. */
     public $minRange = false;
 
-    /**  @var float|false Makes sure that the two thumbs of a range slider don't exceed a difference of the given value. */
+    /** @var float|false Makes sure that the two thumbs of a range slider don't exceed a difference of the given value. */
     public $maxRange = false;
 
     /** @var 'number'|'letter' The type of label to display for a labeled slider. Can be number or letter. */
     public $labelType = 'number';
 
     /** @var array|null An array of label values which restrict the displayed labels to only those which are defined. */
-    public $restrictedLabels = null;
+    public $restrictedLabels;
 
     /** Whether a tooltip should be shown to the thumb(s) on hover. Will contain the current slider value. */
     public bool $showThumbTooltip = false;
@@ -49,7 +48,7 @@ class Slider extends Input
      *
      * @var array|null
      */
-    public $tooltipConfig = null;
+    public $tooltipConfig;
 
     /**
      * Show ticks on a labeled slider.
@@ -92,7 +91,7 @@ class Slider extends Input
     public bool $vertical = false;
 
     /** @var string|null Color of the slider. */
-    public $color = null;
+    public $color;
 
     /** @var View */
     public $slider;
@@ -105,16 +104,16 @@ class Slider extends Input
 
     /** @var object */
     private $secondInput;
-    
+
     #[\Override]
     protected function init(): void
     {
         parent::init();
-        //print_r(get_object_vars(parent::init()));
+
         $this->owner = $this->getOwner();
 
         $this->slider = View::addTo($this->owner);
-        $this->slider->ui ='ui slider';
+        $this->slider->ui = 'ui slider';
 
         if ($this->end) {
             $this->slider->addClass('range');
@@ -139,7 +138,7 @@ class Slider extends Input
         if ($this->color) {
             $this->slider->addClass($this->color);
         }
-        
+
         $sliderSettings = [];
         $sliderSettings['min'] = $this->min;
         $sliderSettings['max'] = $this->max;
@@ -176,19 +175,17 @@ class Slider extends Input
         $sliderSettings['pageMultiplier'] = $this->pageMultiplier;
         $sliderSettings['decimalPlaces'] = $this->decimalPlaces;
         $sliderSettings['preventCrossover'] = $this->preventCrossover;
-        
+
         if ($this->disabled || $this->readOnly) {
             $this->slider->addClass('disabled');
         }
 
         if (!$this->disabled) {
-            /*
-             * First input value, always present
-             */
+            // First input value, always present
             $this->firstInput = $this->owner->addControl(
                 $this->shortName . '_first',
                 [
-                    Hidden::class
+                    Hidden::class,
                 ]
             )->set($this->start);
 
@@ -201,18 +198,18 @@ class Slider extends Input
                                 $this->firstInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'first\'))',
                                 [$this->slider->getHtmlId()]
                             ),
-                        ])
+                        ]
+                    ),
                 ];
             }
             
-            /*
-             * Second input value, optional, depending on $this->end
-             */
+
+            // Second input value, optional, depending on $this->end
             if ($this->end) {
                 $this->secondInput = $this->owner->addControl(
                     $this->shortName . '_second',
                     [
-                        Hidden::class
+                        Hidden::class,
                     ]
                 )->set($this->end);
 
@@ -229,7 +226,8 @@ class Slider extends Input
                                     $this->secondInput->js()->find('input')->jsRender() . '.val($(\'div#\' + [] + \'\').slider(\'get thumbValue\', \'second\'))',
                                     [$this->slider->getHtmlId()]
                                 ),
-                            ])
+                            ]
+                        ),
                     ];
                 }
             }
@@ -239,7 +237,7 @@ class Slider extends Input
             $this->firstInput->setAttr(['readOnly' => '']);
         }
         if (!empty($onChange)) {
-            $sliderSettings = $sliderSettings + $onChange;
+            $sliderSettings += $onChange;
         }
         $this->slider->js(true)->slider(
             $sliderSettings,
