@@ -37,7 +37,7 @@ $slider2 = $form->addControl(
         'max' => 10,
         'step' => 1,
         'start' => 5,
-        'caption' => 'Blue ticked and labeled Simple Slider',
+        'caption' => 'Blue ticked and labeled simple slider',
     ]
 );
 $slider2->slider->addClass('blue');
@@ -53,7 +53,7 @@ $form->addControl(
         'step' => 1,
         'start' => 5,
         'smooth' => true,
-        'caption' => 'Smooth Blue ticked and labeled Simple Slider',
+        'caption' => 'Smooth Blue ticked and labeled simple slider',
     ]
 );
 
@@ -70,7 +70,31 @@ $form->addControl(
         'end' => 6,
         'smooth' => true,
         'color' => 'blue',
-        'caption' => 'Smooth Blue ticked and labeled Ranged Slider',
+        'caption' => 'Smooth Blue ticked and labeled Ranged slider',
+    ]
+);
+
+$form->onSubmit(static function (Form $form) {
+    print_r($form->entity->get());
+});
+
+$form->addControl(
+    'slider_custom1',
+    [
+        Form\Control\Slider::class,
+        'labeled' => true,
+        'ticked' => true,
+        'min' => 1,
+        'max' => 7,
+        'step' => 1,
+        'start' => 1,
+        'smooth' => true,
+        'color' => 'red',
+        'labelType' => 'letter',
+        'customLabels' => [
+            'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'
+        ],
+        'caption' => 'Smooth Red ticked and custom labeled slider',
     ]
 );
 

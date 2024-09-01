@@ -12,11 +12,11 @@ class Slider extends Input
 {
     public string $inputType = 'hidden';
 
-    /** The lowest value the slider can be. */
-    public float $min = 0;
+    /** @var float|string The lowest value the slider can be. */
+    public $min = 0;
 
-    /** The max value the slider can be. */
-    public float $max = 10;
+    /** @var float|string The max value the slider can be. */
+    public $max = 10;
 
     /** @var float|null The slider step. Set to 0 to disable step. */
     public $step = 0;
@@ -89,6 +89,14 @@ class Slider extends Input
 
     /** Whether the ticks and labels should be at the bottom. */
     public bool $vertical = false;
+
+    /**
+     * Custom interpreted labels.
+     * Provide an array which will be used for populating the labels.
+     *
+     * @var array|null
+     */
+    public $customLabels;
 
     /** @var string|null Color of the slider. */
     public $color;
@@ -189,6 +197,27 @@ class Slider extends Input
                 ]
             )->set($this->start);
 
+            if ($this->customLabels) {
+                $app = $this->getApp();
+                
+                $app->html->template->dangerouslyAppendHtml(
+                    'Head',
+                    $app->getTag(
+                        'script',
+                        [],
+                        "
+                var labels = ['" . implode("', '", $this->customLabels) ."'];\n
+                $('#" . $this->slider->name . "')
+                    .slider({
+                        interpretLabel: function(value) {
+                           return labels[value];
+                        }
+                    })
+                ;   
+                        ",
+                        [$this->customLabels, $this->slider->name]));
+            }
+            
             if (!$this->readOnly) {
                 $onChange = [
                     'onChange' => new JsFunction(
