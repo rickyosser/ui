@@ -6,7 +6,9 @@ namespace Atk4\Ui\Form\Control;
 
 use Atk4\Ui\Js\JsExpression;
 use Atk4\Ui\Js\JsFunction;
+use Atk4\Ui\Js\JsBlock;
 use Atk4\Ui\View;
+use Atk4\Ui\HtmlTemplate;
 
 class Slider extends Input
 {
@@ -184,6 +186,29 @@ class Slider extends Input
         $sliderSettings['decimalPlaces'] = $this->decimalPlaces;
         $sliderSettings['preventCrossover'] = $this->preventCrossover;
 
+        if ($this->customLabels) {
+            $customLabelTemplate = new HtmlTemplate(<<<'EOF'
+    {$script}
+EOF);
+            $app = $this->getApp();
+            $customLabelView = View::addTo($app, ['template' => $customLabelTemplate]);
+
+            $customLabelArray = '\'' . implode('\', \'', $this->customLabels) . '\'';
+            $customLabelJS = "var labels = [$customLabelArray];";
+            
+            $sliderSettings['interpretLabel'] = 'function interpretLabel(value) { return labels[value];}';
+
+            $customLabelScript = $app->getTag('script', [], $customLabelJS . 'function interpretLabel(value) { return labels[value];}'); 
+            $customLabelView->template->dangerouslySetHtml('script', $customLabelScript);
+            
+            
+            //$test_tag = $app->getTag('div', ['class' => 'evaluated code', 'data-type' => 'javascript'], $customLabelJS);
+            //print $test_tag;
+            //$this->template->dangerouslyAppendHtml('BeforeInput', $test_tag);
+            
+        }
+        
+        
         if ($this->disabled || $this->readOnly) {
             $this->slider->addClass('disabled');
         }
@@ -197,27 +222,6 @@ class Slider extends Input
                 ]
             )->set($this->start);
 
-            if ($this->customLabels) {
-                $app = $this->getApp();
-                
-                $app->html->template->dangerouslyAppendHtml(
-                    'Head',
-                    $app->getTag(
-                        'script',
-                        [],
-                        "
-                var labels = ['" . implode("', '", $this->customLabels) ."'];\n
-                $('#" . $this->slider->name . "')
-                    .slider({
-                        interpretLabel: function(value) {
-                           return labels[value];
-                        }
-                    })
-                ;   
-                        ",
-                        [$this->customLabels, $this->slider->name]));
-            }
-            
             if (!$this->readOnly) {
                 $onChange = [
                     'onChange' => new JsFunction(

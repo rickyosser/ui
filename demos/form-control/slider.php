@@ -84,13 +84,13 @@ $form->addControl(
         Form\Control\Slider::class,
         'labeled' => true,
         'ticked' => true,
-        'min' => 1,
-        'max' => 7,
+        'min' => 0,
+        'max' => 6,
         'step' => 1,
         'start' => 1,
-        'smooth' => true,
-        'color' => 'red',
-        'labelType' => 'letter',
+        //'smooth' => true,
+        //'color' => 'red',
+        //'labelType' => 'letter',
         'customLabels' => [
             'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'
         ],
