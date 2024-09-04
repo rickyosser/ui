@@ -192,19 +192,19 @@ class Slider extends Input
                     'value',
                 ],
                 [
-                    new JsExpression(<<<EOF
-                                        var labels = [];
-                                        return labels.slice(value, value + 1);
-                    EOF,
-                    [
-                        $this->customLabels,
-                    ],
-                    )
+                    new JsExpression(
+                        <<<'EOF'
+                            var labels = [];
+                            return labels.slice(value, value + 1);
+                        EOF,
+                        [
+                            $this->customLabels,
+                        ],
+                    ),
                 ],
             );
         }
-        
-        
+
         if ($this->disabled || $this->readOnly) {
             $this->slider->addClass('disabled');
         }
