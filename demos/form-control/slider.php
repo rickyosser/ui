@@ -70,7 +70,7 @@ $form->addControl(
         'end' => 6,
         'smooth' => true,
         'showThumbTooltip' => true,
-        'tooltipConfig' =>  ['position' => 'top center', 'variation' => 'big blue'],
+        'tooltipConfig' => ['position' => 'top center', 'variation' => 'big blue'],
         'color' => 'blue',
         'caption' => 'Smooth Blue, ticked and labeled with tool-tips Ranged slider',
     ]
@@ -89,7 +89,7 @@ $form->addControl(
         'smooth' => true,
         'color' => 'green',
         'customLabels' => [
-            'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'
+            'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL',
         ],
         'caption' => 'Smooth Green, ticked and custom labeled slider',
     ]
