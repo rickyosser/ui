@@ -194,9 +194,9 @@ class Slider extends Input
                 [
                     new JsExpression(
                         <<<'EOF'
-                            var labels = [];
-                            return labels.slice(value, value + 1);
-                        EOF,
+                                var labels = [];
+                                return labels.slice(value, value + 1);
+                            EOF,
                         [
                             $this->customLabels,
                         ],
