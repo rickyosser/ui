@@ -187,9 +187,21 @@ class Slider extends Input
         $sliderSettings['preventCrossover'] = $this->preventCrossover;
 
         if ($this->customLabels) {
-            $customLabelArray = "'" . implode("', '", $this->customLabels) . "'";
-            $customLabelJS = "var labels = [$customLabelArray];";
-            $sliderSettings['interpretLabel'] = new JsFunction(['value'], [new JsExpression($customLabelJS . 'return labels.slice(value, value + 1)')]);
+            $sliderSettings['interpretLabel'] = new JsFunction(
+                [
+                    'value',
+                ],
+                [
+                    new JsExpression(<<<EOF
+                                        var labels = [];
+                                        return labels.slice(value, value + 1);
+                    EOF,
+                    [
+                        $this->customLabels,
+                    ],
+                    )
+                ],
+            );
         }
         
         
