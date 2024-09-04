@@ -69,14 +69,12 @@ $form->addControl(
         'start' => 3,
         'end' => 6,
         'smooth' => true,
+        'showThumbTooltip' => true,
+        'tooltipConfig' =>  ['position' => 'top center', 'variation' => 'big blue'],
         'color' => 'blue',
-        'caption' => 'Smooth Blue ticked and labeled Ranged slider',
+        'caption' => 'Smooth Blue, ticked and labeled with tool-tips Ranged slider',
     ]
 );
-
-$form->onSubmit(static function (Form $form) {
-    print_r($form->entity->get());
-});
 
 $form->addControl(
     'slider_custom1',
@@ -87,14 +85,13 @@ $form->addControl(
         'min' => 0,
         'max' => 6,
         'step' => 1,
-        'start' => 1,
-        //'smooth' => true,
-        //'color' => 'red',
-        //'labelType' => 'letter',
+        'start' => 2,
+        'smooth' => true,
+        'color' => 'green',
         'customLabels' => [
             'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'
         ],
-        'caption' => 'Smooth Red ticked and custom labeled slider',
+        'caption' => 'Smooth Green, ticked and custom labeled slider',
     ]
 );
 

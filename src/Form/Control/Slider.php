@@ -187,25 +187,9 @@ class Slider extends Input
         $sliderSettings['preventCrossover'] = $this->preventCrossover;
 
         if ($this->customLabels) {
-            $customLabelTemplate = new HtmlTemplate(<<<'EOF'
-    {$script}
-EOF);
-            $app = $this->getApp();
-            $customLabelView = View::addTo($app, ['template' => $customLabelTemplate]);
-
-            $customLabelArray = '\'' . implode('\', \'', $this->customLabels) . '\'';
+            $customLabelArray = "'" . implode("', '", $this->customLabels) . "'";
             $customLabelJS = "var labels = [$customLabelArray];";
-            
-            $sliderSettings['interpretLabel'] = 'function interpretLabel(value) { return labels[value];}';
-
-            $customLabelScript = $app->getTag('script', [], $customLabelJS . 'function interpretLabel(value) { return labels[value];}'); 
-            $customLabelView->template->dangerouslySetHtml('script', $customLabelScript);
-            
-            
-            //$test_tag = $app->getTag('div', ['class' => 'evaluated code', 'data-type' => 'javascript'], $customLabelJS);
-            //print $test_tag;
-            //$this->template->dangerouslyAppendHtml('BeforeInput', $test_tag);
-            
+            $sliderSettings['interpretLabel'] = new JsFunction(['value'], [new JsExpression($customLabelJS . 'return labels.slice(value, value + 1)')]);
         }
         
         
