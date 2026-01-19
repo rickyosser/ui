@@ -2,9 +2,9 @@
 {$Input}
 <div {$attributes}>
 {$BeforeInput}{$AfterBeforeInput}
-<select class="select {$multipleClass} {$disabledClass}" multiple>
-{Item}<option value="{$value}">{$title}</option>
+<select class="{$name} {$multipleClass} {$disabledClass}" multiple>
+{Item}<option value="{$value}" {$selected}>{$Icon}{$title}</option>
 {/Item}
-</div>
+</select>
 {$AfterInput}{$AfterAfterInput}
 </div>

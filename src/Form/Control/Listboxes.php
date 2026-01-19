@@ -21,7 +21,7 @@ class Listboxes extends Input
     /**
      * @var array<array-key, mixed>
      */
-    public array $values;
+    public ?array $values = null;
 
 
     /**
@@ -50,8 +50,6 @@ class Listboxes extends Input
     ];
 
 
-    public ?array $model = null;
-
     /**
      * Set Dual-Listbox option.
      *
@@ -71,35 +69,62 @@ class Listboxes extends Input
     /** Subtemplate for a single dropdown item. */
     protected HtmlTemplate $_tItem;
 
+    /**
+     *
+     * @var inputField
+     *
+     */
+    private $availableInput;
+
+    private $selectedInput;
+
+    private $owner;
+    private $listbox;
+
     #[\Override]
     protected function init(): void
     {
         parent::init();
 
+        $this->owner = $this->getOwner();
+
+        /*        $this->availableInput = $this->owner->addControl(
+            $this->shortName . '_available_input',
+            [
+                Hidden::class
+            ]
+        );//->set($this->availableValues);
+     
+        $this->selectedInput = $this->owner->addControl(
+            $this->shortName . '_selected_input',
+            [
+                Hidden::class
+            ]
+        );//->set($this->selectedValues);
+        */
+
+        $onChange =  [
+            'onChange' => new JsFunction(
+                ['v'],
+                [
+                    new JsExpression($this->js()->find('input')->jsRender().".val($(document.querySelector('.[]').getElementsByTagName('option')))", [$this->shortName]),
+                ])
+        ];
+
+        print_r($this->entityField);
         $this->_tItem = $this->template->cloneRegion('Item');
         $this->template->del('Item');
     }
 
     protected function htmlRenderValue(): void
     {
-        if ($this->model !== null) {
-            if ($this->renderRowFunction) {
-                foreach ($this->model as $row) {
-                    $this->_addCallBackRow($row);
-                }
-            } else {
-                // for standard model rendering, only load ID and title field
-                $this->model->setOnlyFields([$this->model->titleField, $this->model->idField]);
-                $this->_renderItemsForModel();
+
+        if ($this->renderRowFunction) {
+            foreach ($this->values as $key => $value) {
+                $this->_addCallBackRow($value, $key);
             }
         } else {
-            if ($this->renderRowFunction) {
-                foreach ($this->values as $key => $value) {
-                    $this->_addCallBackRow($value, $key);
-                }
-            } else {
-                $this->_renderItemsForValues();
-            }
+            $this->_renderItemsForValues();
         }
     }
 
@@ -112,24 +137,10 @@ class Listboxes extends Input
         }
         */
 
-        $this->jsInput(true, new JsExpression('new DualListbox("select", [])', [$this->options]));
+        $this->jsInput(true, new JsExpression('new DualListbox([], [])', ['.' . $this->shortName, $this->options]));
         $this->htmlRenderValue();
 
         parent::renderView();
-    }
-
-    /**
-     * Sets the dropdown items to the template if a model is used.
-     */
-    protected function _renderItemsForModel(): void
-    {
-        foreach ($this->model as $id => $row) {
-            $title = $row->getTitle();
-            $this->_tItem->set('value', $this->getApp()->uiPersistence->typecastAttributeSaveField($this->model->getIdField(), $id));
-            $this->_tItem->set('title', $title || is_numeric($title) ? (string) $title : '');
-            // add item to template
-            $this->template->dangerouslyAppendHtml('Item', $this->_tItem->renderToHtml());
-        }
     }
 
     /**
@@ -140,13 +151,17 @@ class Listboxes extends Input
         foreach ($this->values as $key => $val) {
             $this->_tItem->set('value', (string) $key);
             if (is_array($val)) {
+                //print_r($val);
                 if (array_key_exists('icon', $val)) {
                     $this->_tIcon->set('iconClass', $val['icon'] . ' icon');
                     $this->_tItem->dangerouslySetHtml('Icon', $this->_tIcon->renderToHtml());
                 } else {
                     $this->_tItem->del('Icon');
                 }
-                $this->_tItem->set('title', $val[0] || is_numeric($val[0]) ? (string) $val[0] : '');
+                $this->_tItem->set('title',  $val['title'] || is_numeric($val['title']) ? (string) $val['title'] : '');
+                if($val['selected'] == true) {
+                    $this->_tItem->set('selected', 'selected');
+                }
             } else {
                 $this->_tItem->set('title', $val || is_numeric($val) ? (string) $val : '');
             }
@@ -167,7 +182,7 @@ class Listboxes extends Input
         if (!$action instanceof JsBlock) {
             $action = [$action];
         }
-
+        $onChange = new JsExpression($this->js()->find('input')->jsRender().".val($(document.querySelector('.[]').getElementsByTagName('option')))", [$this->shortName]);
         //$this->options['onChange'] = new JsFunction(['date', 'text', 'mode'], $action);
     }
 

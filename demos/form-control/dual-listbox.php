@@ -13,94 +13,33 @@ use Atk4\Ui\Text;
 /** @var App $app */
 require_once __DIR__ . '/../init-app.php';
 
-$demo = Demo::addTo($app);
 
-//Header::addTo($demo, ['Listboxes sample:']);
-
-
-
-/*
-$form = Form::addTo($demo->right);
-$form->addControl('category_id', [Form\Control\Dropdown::class, 'model' => new Category($app->db)]);
-$form->addControl('sub_category_id', [Form\Control\DropdownCascade::class, 'cascadeFrom' => 'category_id', 'reference' => Category::hinting()->fieldName()->subCategories]);
-$form->addControl('product_id', [Form\Control\DropdownCascade::class, 'cascadeFrom' => 'sub_category_id', 'reference' => SubCategory::hinting()->fieldName()->products]);
-
-$form->onSubmit(static function (Form $form) use ($app) {
-    $message = $app->encodeJson($app->uiPersistence->typecastSaveRow($form->entity, $form->entity->get()));
-
-    $view = new Message('Values: ');
-    $view->setApp($form->getApp());
-    $view->invokeInit();
-    $view->text->addParagraph($message);
-
-    return $view;
-});
-*/
-$form = Form::addTo($demo);
-//$form->buttonSave = false;
-
+$form = Form::addTo($app);
 // standard with model: use idField as Value, titleField as Title for each Dropdown option
+$values1 = [
+    '1' => ['title' => 'One', 'selected' => false],
+    '2' => 'Two',
+    '3' => 'Three',
+    '4' => ['title' => 'Four', 'selected' => true]
+];
+
+$values2 = [
+    '5' => 'Five',
+    '6' => 'Six',
+    '7' => 'Seven',
+    '8' => 'Eight'
+];
 
 $form->addControl('withValues', [
     Form\Control\Listboxes::class,
     'caption' => 'Dual Listbox with data from values',
-    'values' => [
-        '1' => 'One',
-        '2' => 'Two',
-        '3' => 'Three',
-        '4' => 'Four'
-    ]
+    'values' => $values1
 ]);
 
-/*
-// custom callback: alter title
-$form->addControl('withModel2', [
-    Form\Control\Dropdown::class,
-    'caption' => 'Dropdown with data from Model and custom render',
-    'model' => (new Country($app->db))->setLimit(25),
-    'renderRowFunction' => static function (Country $row) {
-        return [
-            'title' => $row->getTitle() . ' (' . $row->iso3 . ')',
-        ];
-    },
-]);
-
-// custom callback: add icon
-$form->addControl('withModel3', [
-    Form\Control\Dropdown::class,
-    'caption' => 'Dropdown with data from Model and custom render with icon',
-    'model' => (new File($app->db))->setLimit(25),
-    'renderRowFunction' => static function (File $row) {
-        return [
-            'title' => $row->getTitle(),
-            'icon' => $row->is_folder ? 'folder' : 'file',
-        ];
-    },
-]);
-*/
-$form->addControl('enum', [
-    Form\Control\Dropdown::class,
-    'caption' => 'Using Single Values',
-    'values' => ['default', 'option1', 'option2', 'option3'],
-]);
-/*
-$form->addControl('values', [
-    Form\Control\Dropdown::class,
-    'caption' => 'Using values with default text',
-    'placeholder' => 'Choose an option',
-    'values' => ['default' => 'Default', 'option1' => 'Option 1', 'option2' => 'Option 2', 'option3' => 'Option 3'],
-]);
-
-$form->addControl('icon', [
-    Form\Control\Dropdown::class,
-    'caption' => 'Using icon',
-    'placeholder' => 'Choose an icon',
-    'values' => [
-        'tag' => ['Tag', 'icon' => 'tag'],
-        'globe' => ['Globe', 'icon' => 'globe'],
-        'registered' => ['Registered', 'icon' => 'registered'],
-        'file' => ['File', 'icon' => 'file'],
-    ],
+$form->addControl('withValues2', [
+    Form\Control\Listboxes::class,
+    'caption' => 'Dual Listbox with data from values',
+    'values' => $values2
 ]);
 
 $form->addControl('multi', [
@@ -110,7 +49,7 @@ $form->addControl('multi', [
     'multiple' => true,
     'values' => ['default' => 'Default', 'option1' => 'Option 1', 'option2' => 'Option 2'],
 ]);
-*/
+
 $form->onSubmit(static function (Form $form) use ($app) {
     $message = $app->encodeJson($form->entity->get());
     $view = new Message('Values:');
@@ -120,3 +59,7 @@ $form->onSubmit(static function (Form $form) use ($app) {
 
     return $view;
 });
+
+$msg = Message::addTo($app, [
+    'Page end'
+]);
