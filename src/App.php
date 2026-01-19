@@ -57,6 +57,7 @@ class App
         'flatpickr' => '/public/external/flatpickr/dist',
         'highlight.js' => '/public/external/@highlightjs/cdn-assets',
         'chart.js' => '/public/external/chart.js/dist', // for atk4/chart
+        'dual-listbox' => '/public/external/dual-listbox/dist', // for atk4/chart
     ];
 
     /** @var ExecutorFactory App wide executor factory object for Model user action. */
@@ -610,6 +611,10 @@ class App
         // Fomantic-UI
         $this->requireJs($this->cdn['fomantic-ui'] . '/semantic' . ($minified ? '.min' : '') . '.js');
         $this->requireCss($this->cdn['fomantic-ui'] . '/semantic' . ($minified ? '.min' : '') . '.css');
+
+        // Dual-Listbox
+        $this->requireJs($this->cdn['dual-listbox'] . '/dual-listbox' . ($minified ? '.min' : '') . '.js');
+        $this->requireCss($this->cdn['dual-listbox'] . '/dual-listbox' . ($minified ? '.min' : '') . '.css');
 
         // flatpickr - TODO should be load only when needed
         // needs https://github.com/atk4/ui/issues/1875

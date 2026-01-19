@@ -1,0 +1,10 @@
+{$DefaultText}
+{$Input}
+<div {$attributes}>
+{$BeforeInput}{$AfterBeforeInput}
+<select class="select {$multipleClass} {$disabledClass}" multiple>
+{Item}<option value="{$value}">{$title}</option>
+{/Item}
+</div>
+{$AfterInput}{$AfterAfterInput}
+</div>
